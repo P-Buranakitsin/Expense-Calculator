@@ -20,6 +20,22 @@ class People {
   constructor() {
     this.friends = [];
   }
+
+  // Store new expenses to existing state
+  addFriend() {
+    const expenses = state.expense.items.map(
+      (item) => parseFloat(item.price, 10) / names.length
+    );
+    const totalExpense = expenses.reduce((acc, cur) => acc + cur);
+    const friendsArrObj = names.map((name) => {
+      return {
+        name: name,
+        expenses: expenses,
+        total: totalExpense,
+      };
+    });
+    state.people.friends = friendsArrObj;
+  }
 }
 
 // selectors
@@ -47,7 +63,7 @@ document
     if (elements.item.value && elements.price.value > 0) {
       controlExpense();
       if (state.people.friends.length !== 0) {
-        storeExpenses();
+        state.people.addFriend();
         delCols();
         timesRenderPeople();
       }
@@ -98,22 +114,6 @@ const renderExpense = (item) => {
 
 const names = [];
 
-// Store new expenses to existing state
-const storeExpenses = () => {
-  const expenses = state.expense.items.map(
-    (item) => parseFloat(item.price, 10) / names.length
-  );
-  const totalExpense = expenses.reduce((acc, cur) => acc + cur);
-  const friendsArrObj = names.map((name) => {
-    return {
-      name: name,
-      expenses: expenses,
-      total: totalExpense,
-    };
-  });
-  state.people.friends = friendsArrObj;
-};
-
 // Delete previous column(s)
 const delCols = () => {
   const addedTDs = Array.from(document.querySelectorAll("td"));
@@ -131,6 +131,7 @@ const timesRenderPeople = () => {
 
 // Control People
 const controlPeople = () => {
+  // Check if name already exists in array
   if (
     state.expense.items.length >= 1 &&
     !names.includes(elements.friend.value)
@@ -138,14 +139,14 @@ const controlPeople = () => {
     // Delete previous column(s)
     delCols();
 
-    // Check if name already exists in array
     names.push(elements.friend.value);
-    storeExpenses();
+    state.people.addFriend();
 
     timesRenderPeople();
   } else {
     alert("Please add an item first or enter unrepeated name");
   }
+  elements.friend.value = "";
 };
 
 const renderPeople = (friendArr, friend) => {
