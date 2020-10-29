@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JavaScript Test: Expense Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <h1>JavaScript Test: Expense Calculator</h1>
+    <div class="container">
+      <div class="sub-container1">
+        <text>เพิ่มค่าใช้จ่าย:</text>
+        <input placeholder="รายการค่าใช้จ่าย" id="item" />
+        <text>จำนวนเงิน:</text>
+        <input type="number" placeholder="0" id="price" />
+        <input type="button" value="เพิ่มรายการใช้จ่าย" />
+      </div>
+      <div class="sub-container2">
+        <text>เพิ่มคน:</text>
+        <input placeholder="ชื่อคนที่จะเพิ่ม" size="50" id="friend" />
+        <input type="button" value="เพิ่มคน" />
+      </div>
+      <div class="sub-container3">
+        <table style="width: 100%">
+          <tr>
+            <th>รายการค่าใช้จ่าย</th>
+            <th>รวมทุกคน</th>
+          </tr>
+          <tr style="color: red">
+            <th>จ่ายเพิ่ม/ได้คืน</th>
+            <th id="total">0</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+
+  <script src="index.js"></script>
+</html>
