@@ -22,7 +22,7 @@ class People {
   }
 
   // Store new expenses to existing state
-  addFriend() {
+  addFriend(names) {
     const expenses = state.expense.items.map(
       (item) => parseFloat(item.price, 10) / names.length
     );
@@ -35,6 +35,12 @@ class People {
       };
     });
     state.people.friends = friendsArrObj;
+  }
+
+  // Get friends' names
+  getNames() {
+    const names = state.people.friends.map(e => e.name)
+    return names
   }
 }
 
@@ -60,10 +66,11 @@ state.people = new People();
 document
   .querySelector("[value=เพิ่มรายการใช้จ่าย]")
   .addEventListener("click", () => {
+    const names = state.people.getNames();
     if (elements.item.value && elements.price.value > 0) {
       controlExpense();
       if (state.people.friends.length !== 0) {
-        state.people.addFriend();
+        state.people.addFriend(names);
         delCols();
         timesRenderPeople();
       }
@@ -112,8 +119,6 @@ const renderExpense = (item) => {
     .insertAdjacentHTML("beforebegin", markup);
 };
 
-const names = [];
-
 // Delete previous column(s)
 const delCols = () => {
   const addedTDs = Array.from(document.querySelectorAll("td"));
@@ -131,6 +136,9 @@ const timesRenderPeople = () => {
 
 // Control People
 const controlPeople = () => {
+  // Get names
+  const names = state.people.getNames();
+
   // Check if name already exists in array
   if (
     state.expense.items.length >= 1 &&
@@ -140,7 +148,7 @@ const controlPeople = () => {
     delCols();
 
     names.push(elements.friend.value);
-    state.people.addFriend();
+    state.people.addFriend(names);
 
     timesRenderPeople();
   } else {
