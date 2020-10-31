@@ -66,6 +66,7 @@ state.people = new People();
 document
   .querySelector("[value=เพิ่มรายการใช้จ่าย]")
   .addEventListener("click", () => {
+    windows.l = "Toon"
     const names = state.people.getNames();
     if (elements.item.value && elements.price.value > 0) {
       controlExpense();
