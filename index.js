@@ -81,11 +81,12 @@ const controlExpense = () => {
     // Store input values in the state
     const newItem = state.expense.addItem(
       // Use trim method to remove whitespaces from start and end of string
+      // Then use /\s+/g, " " to replace multiple whitespaces between words with single whitespace
       elements.item.value.trim().replace(/\s+/g, " "),
       elements.price.value
     );
 
-    // Prices without division
+    // Prices without being divided
     state.expense.prices = state.expense.items.map((item) =>
       parseFloat(item.price, 10)
     );
