@@ -39,8 +39,8 @@ class People {
 
   // Get friends' names
   getNames() {
-    const names = state.people.friends.map(e => e.name)
-    return names
+    const names = state.people.friends.map((e) => e.name);
+    return names;
   }
 }
 
@@ -66,20 +66,7 @@ state.people = new People();
 document
   .querySelector("[value=เพิ่มรายการใช้จ่าย]")
   .addEventListener("click", () => {
-    windows.l = "Toon"
-    const names = state.people.getNames();
-    if (elements.item.value && elements.price.value > 0) {
-      controlExpense();
-      if (state.people.friends.length !== 0) {
-        state.people.addFriend(names);
-        delCols();
-        timesRenderPeople();
-      }
-    } else if (!elements.item.value || !elements.price.value) {
-      alert("Please enter both item and its price");
-    } else if (elements.item.value && elements.price.value <= 0) {
-      alert("Price must be higher than 0");
-    }
+    controlExpense();
   });
 
 // Handling 'เพิ่มคน' button clicks
@@ -89,24 +76,37 @@ document.querySelector("[value=เพิ่มคน]").addEventListener("click"
 
 // Control Expense
 const controlExpense = () => {
-  // Store input values in the state
-  const newItem = state.expense.addItem(
-    elements.item.value,
-    elements.price.value
-  );
+  if (elements.item.value && elements.price.value > 0) {
+    const names = state.people.getNames();
+    // Store input values in the state
+    const newItem = state.expense.addItem(
+      // Use trim method to remove whitespaces from start and end of string
+      elements.item.value.trim().replace(/\s+/g, " "),
+      elements.price.value
+    );
 
-  // Prices without division
-  state.expense.prices = state.expense.items.map((item) =>
-    parseFloat(item.price, 10)
-  );
-  const totalPrice = state.expense.prices.reduce((acc, cur) => acc + cur);
-  state.expense.prices.push(totalPrice);
+    // Prices without division
+    state.expense.prices = state.expense.items.map((item) =>
+      parseFloat(item.price, 10)
+    );
+    const totalPrice = state.expense.prices.reduce((acc, cur) => acc + cur);
+    state.expense.prices.push(totalPrice);
+
+    // Render expense items according to input values
+    renderExpense(newItem);
+    if (state.people.friends.length !== 0) {
+      state.people.addFriend(names);
+      delCols();
+      timesRenderPeople();
+    }
+  } else if (!elements.item.value || !elements.price.value) {
+    alert("Please enter both item and its price");
+  } else if (elements.item.value && elements.price.value <= 0) {
+    alert("Price must be higher than 0");
+  }
 
   // Clear input fields
   elements.item.value = elements.price.value = "";
-
-  // Render expense items according to input values
-  renderExpense(newItem);
 };
 
 // Render Expense to table
@@ -137,24 +137,33 @@ const timesRenderPeople = () => {
 
 // Control People
 const controlPeople = () => {
+  // Remove whitespace from both ends of a string
+  let inputName = elements.friend.value.trim();
+
+  // Replace multiple whitspaces between words with single white space
+  // td tag can only displace text with single space
+  inputName = inputName.replace(/\s+/g, " ");
+
   // Get names
   const names = state.people.getNames();
 
-  // Check if name already exists in array
-  if (
-    state.expense.items.length >= 1 &&
-    !names.includes(elements.friend.value)
-  ) {
-    // Delete previous column(s)
-    delCols();
+  if (inputName !== "") {
+    // Check if name already exists in array
+    if (state.expense.items.length >= 1 && !names.includes(inputName)) {
+      // Delete previous column(s)
+      delCols();
 
-    names.push(elements.friend.value);
-    state.people.addFriend(names);
+      names.push(inputName);
+      state.people.addFriend(names);
 
-    timesRenderPeople();
+      timesRenderPeople();
+    } else {
+      alert("Please add an item first or enter unrepeated name");
+    }
   } else {
-    alert("Please add an item first or enter unrepeated name");
+    alert("Please enter a name");
   }
+
   elements.friend.value = "";
 };
 
